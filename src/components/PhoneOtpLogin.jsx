@@ -1,36 +1,40 @@
+// src/components/PhoneOtpLogin.jsx
 import React, { useState } from "react";
 import OtpInput from "./OtpInput";
 
 function PhoneOtpLogin() {
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [otp, setOtp] = useState("");
+  const [showOtpInput, setShowOtpInput] = useState(false);
 
   const handlePhoneNumber = (e) => {
-    setPhoneNumber(e.target.value); // Update phone number state
+    setPhoneNumber(e.target.value);
   };
 
   const handlePhoneSubmit = (e) => {
     e.preventDefault();
 
-    // Logic to send OTP to the entered phone number
     const regex = /[^0-9]/g;
+
+    // 10 digit hona chahiye & sirf numbers
     if (phoneNumber.length !== 10 || regex.test(phoneNumber)) {
       alert("Please enter a valid 10-digit phone number.");
       return;
     }
 
-    //Call API to send OTP
-    //Show OTP input field on success response
-    setOtp("true");
+    // yaha normally API call karoge OTP send karne ke liye
+    // demo ke liye sirf UI change kar rahe
+    setShowOtpInput(true);
   };
 
-  const onOtpSubmit = (otp) => {
-    console.log("Login Sucessful", otp);
+  const handleOtpSubmit = (otp) => {
+    console.log("Login Successful with OTP:", otp);
+    alert("Login Successful ✅");
+    // yaha aage ka login logic (API call, token save, etc.)
   };
 
   return (
     <div>
-      {!otp ? (
+      {!showOtpInput ? (
         <form onSubmit={handlePhoneSubmit}>
           <input
             type="text"
@@ -38,12 +42,14 @@ function PhoneOtpLogin() {
             onChange={handlePhoneNumber}
             placeholder="Enter Phone Number"
           />
-          <button type="submit">Submit</button>
+          <button type="submit">Send OTP</button>
         </form>
       ) : (
         <div>
-          OTP sent to {phoneNumber}
-          <OtpInput length={6} onOtpSubmit={onOtpSubmit} />
+          <p>
+            OTP sent to <b>{phoneNumber}</b>
+          </p>
+          <OtpInput length={6} onOtpSubmit={handleOtpSubmit} />
         </div>
       )}
     </div>
